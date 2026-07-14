@@ -5,14 +5,44 @@ import "fmt"
 const VatRate = 0.15 // just a mock data
 const ServiceTaxRate = 0.05 // just a mock data
 
-// take the base price and print the recepit
-func ShowReceiptWithBalance(basePrice float64, userBalance float64) {
-	vatAmount := basePrice * VatRate
-	serviceAmount := basePrice * ServiceTaxRate
-	totalPrice := basePrice + vatAmount + serviceAmount
+/*
+	Instead of make a one function do all the work im going to use
+	Concept which "Separation of Concerns"
+	1. function that calculate the charges
+	2. function that check the user level
+	3. function that print the receipt "main func"
+*/
 
+
+func calculateCharges(basePrice float64) (vat, service, total float64) {
+		vat = VatRate * basePrice
+		service = ServiceTaxRate * basePrice
+		total = basePrice + vat + service
+		return // naked return 
+
+}
+
+func evalTier(remainingBalance float64) (string, float64) {
+		tier := "Regular Customer"
+		shippingDiscount := 0.0
+
+		switch {
+		case remainingBalance >= 500.0:
+			tier = "Premium Customer"
+			shippingDiscount = 15.0
+		case remainingBalance >= 200.0:
+			tier = "Gold Customer"
+			shippingDiscount = 5.0
+		}
+		return tier, shippingDiscount
+
+}
+
+func ShowReceiptWithBalance(basePrice, userBalance float64) {
 
 	// check if the user has enough money
+	vatAmount, serviceAmount, totalPrice := calculateCharges(basePrice)
+
 	if userBalance < totalPrice {
 		fmt.Printf("❌ Transaction Declined: Insufficient balance!\n")
 		fmt.Printf("Required: $%.1f | Your Balance: $%.1f\n", totalPrice, userBalance)
@@ -20,23 +50,8 @@ func ShowReceiptWithBalance(basePrice float64, userBalance float64) {
 		return
 	}
 	
-	// check the user level for discount
 	remainingBalance := userBalance - totalPrice
-	tier := ""
-	shippingDiscount := 0.0
-
-	switch {
-	case remainingBalance >= 500.0:
-		tier = "Premium Customer"
-		shippingDiscount = 15.0
-	case remainingBalance >= 200.0:
-		tier = "Gold Customer"
-		shippingDiscount = 5.0
-	default:
-		tier = "Regular Customer"
-		shippingDiscount = 0.0
-	}
-	
+	tier, shippingDiscount := evalTier(remainingBalance)
 
 	fmt.Println("-----------------------")
 	fmt.Println("--- RECEIPT DETAILS ---")
