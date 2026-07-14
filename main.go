@@ -11,7 +11,9 @@ func main() {
 	fmt.Println()
 
 
-	samplePrice := 169.169
+	price := 100.0
 
-	billing.ShowInitialReceipt(samplePrice)
+	fmt.Println("[TEST 1: Successful Purchase]")
+	billing.ShowReceiptWithBalance(price, 650.0)
+	fmt.Println()
 }
