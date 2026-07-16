@@ -39,7 +39,8 @@ func evalTier(remainingBalance float64) (string, float64) {
 }
 
 func ShowReceiptWithBalance(basePrice, userBalance float64) {
-
+	defer fmt.Println("Thank you for using our Billing CLI!.")
+	defer println()
 	// check if the user has enough money
 	vatAmount, serviceAmount, totalPrice := calculateCharges(basePrice)
 
@@ -67,6 +68,4 @@ func ShowReceiptWithBalance(basePrice, userBalance float64) {
 		fmt.Printf("Congrats: You saved $%.1f on shipping!\n", shippingDiscount)
 	}
 	fmt.Printf("Remaining Balance:  $%.1f\n", (remainingBalance + shippingDiscount))
-
-
 }
